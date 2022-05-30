@@ -1,10 +1,8 @@
-# Data analysis
+# Femicide Media Watch
 - Document here the project: femicide_media_watch
 - Description: Project Description
 - Data Source:
 - Type of analysis:
-
-Please document the project the better you can.
 
 # Startup the project
 
@@ -12,63 +10,15 @@ The initial setup.
 
 Create virtualenv and install the project:
 ```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv ~/venv ; source ~/venv/bin/activate ;\
-    pip install pip -U; pip install -r requirements.txt
+pyenv virtualenv femicide_media_watch
+cd ~/code/u-amine/femicide_media_watch
+
+pyenv local femicide_media_watch
 ```
 
-Unittest test:
+Install the minimum packages:
 ```bash
-make clean install test
-```
-
-Check for femicide_media_watch in gitlab.com/{group}.
-If your project is not set please add it:
-
-- Create a new project on `gitlab.com/{group}/femicide_media_watch`
-- Then populate it:
-
-```bash
-##   e.g. if group is "{group}" and project_name is "femicide_media_watch"
-git remote add origin git@github.com:{group}/femicide_media_watch.git
-git push -u origin master
-git push -u origin --tags
-```
-
-Functionnal test with a script:
-
-```bash
-cd
-mkdir tmp
-cd tmp
-femicide_media_watch-run
-```
-
-# Install
-
-Go to `https://github.com/{group}/femicide_media_watch` to see the project, manage issues,
-setup you ssh public key, ...
-
-Create a python3 virtualenv and activate it:
-
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv -ppython3 ~/venv ; source ~/venv/bin/activate
-```
-
-Clone the project and install it:
-
-```bash
-git clone git@github.com:{group}/femicide_media_watch.git
-cd femicide_media_watch
-pip install -r requirements.txt
-make clean install test                # install and test
-```
-Functionnal test with a script:
-
-```bash
-cd
-mkdir tmp
-cd tmp
-femicide_media_watch-run
+pip install --upgrade pip
+pip install -r https://gist.githubusercontent.com/krokrob/53ab953bbec16c96b9938fcaebf2b199/raw/9035bbf12922840905ef1fbbabc459dc565b79a3/minimal_requirements.txt
+pip list
 ```
