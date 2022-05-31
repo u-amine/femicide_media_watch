@@ -27,3 +27,10 @@ six>=1.14
 joblib
 memoized-property
 termcolor
+
+#recolect_data_from
+
+requests
+sys
+urllib.parse
+theguardian_content
