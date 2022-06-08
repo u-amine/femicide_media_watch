@@ -27,6 +27,7 @@ RUNTIME_VERSION=1.15
 
 PACKAGE_NAME=FemicideMediaWatch
 FILENAME=trainer
+FILENAME_GRID=grid_search
 
 JOB_NAME=femicideMW_LDA_$(shell date +'%Y%m%d_%H%M%S')
 
@@ -41,6 +42,9 @@ upload_data:
 
 run_locally:
 	@python -m ${PACKAGE_NAME}.${FILENAME}
+
+run_grid:
+	@python -m ${PACKAGE_NAME}.${FILENAME_GRID}
 
 gcp_submit_training:
 	gcloud ai-platform jobs submit training ${JOB_NAME} \

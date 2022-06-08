@@ -75,8 +75,6 @@ def cleaning_data(data):
     print(f"XXXXXXXXXXXXXXXXXX")
     data['clean_text'] = data.clean_text.apply(lemma)
     data['clean_text'] = data['clean_text'].astype('str')
-    del data['body']
-    del data['fields']
     print(f"saving the file!")
     print(f"XXXXXXXXXXXXXXXXXX")
     save_csv(data, "guardian_full")
