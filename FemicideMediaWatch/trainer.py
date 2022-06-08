@@ -8,14 +8,16 @@ from nltk.corpus import stopwords
 import string
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import word_tokenize 
-from sklearn import set_config; set_config(display='diagram')
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import make_pipeline, make_union
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import MultinomialNB, ComplementNB
 from google.cloud import storage
+from sklearn.model_selection import cross_validate
+from sklearn.model_selection import GridSearchCV
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 STORAGE_LOCATION = 'models/femicide_model'
 MODEL_NAME='femicide_model'
@@ -78,23 +80,47 @@ def cleaning_data(data):
 def building_pipeline():
     feature_averager = FunctionTransformer(cleaning_data)
 
-    vectorizer = CountVectorizer()
+    vectorizer = CountVectorizer(ngram_range=(1, 1))
     #vectorizer = joblib.load("vectorice.joblib")
-
-    nvaive = MultinomialNB()
+    #X_bow= vectorizer.fit_transform(X.clean_text)
+    nvaive = MultinomialNB(alpha=0.1)
 
     pipe = make_pipeline(feature_averager,
                         vectorizer, 
-                        MultinomialNB())
+                        nvaive)
+    
+    
+    #cv_nb = cross_validate(MultinomialNB(),X_bow, X.cases , scoring = "recall")
+
+    #print(cv_nb['test_score'].mean())
     return pipe
 
+def grid_search(X, pipe):
+    parameters = {
+        'countvectorizer__ngram_range': ((1, 2),(1,1), (2,2), (1, 3)),
+        'multinomialnb__alpha': (0.1,1)}
+
+    """ 'countvectorizer__max_df': 1.0,
+        'countvectorizer__max_features': None,
+        'countvectorizer__min_df': (1,10) """
+        
+    grid_search = GridSearchCV(pipe, parameters, scoring = "recall",
+                            cv = 5, n_jobs=-1, verbose=1)
+
+    grid_search.fit(X, X.cases)
+
+    print(f"Best Score = {grid_search.best_score_}")
+    print(f"Best params = {grid_search.best_params_}")
+    
 def defining_dataset(df):
     df_solo_1 = df[df.topic ==1]
     y = df_solo_1['cases']
     X = pd.DataFrame(df_solo_1.fields)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
     pipe=building_pipeline()
+    #grid_search(df_solo_1, pipe)
     y_pred = pipe.fit(X, y)
+
     joblib.dump(y_pred, 'pipeline.joblib')
     
 def main():
