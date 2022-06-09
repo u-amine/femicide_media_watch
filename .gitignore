@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+FemicideMediaWatch/data/femicide_final_with_ceros.csv
