@@ -44,7 +44,7 @@ def predict(date_start):
     #date_start =datetime.strptime("2000-01-01", "%Y-%m-%d") #if date_start != "field required" else today.strptime("%Y-%m-%d")
     #date_end=datetime.strptime(date_end, "%Y-%m-%d") if date_end != "field required"else today.strptime("%Y-%m-%d")
     i=1
-    url=f'https://content.guardianapis.com/search?&from-date=2022-01-01&to-date={today}&show-fields=body&page-size=50&page={i}&api-key=test'
+    url=f'https://content.guardianapis.com/search?&from-date=2020-01-01&to-date={today}&show-fields=body&page-size=50&page={i}&api-key=test'
     news = requests.get(url).json()
     total= round(int(news["response"]["total"])/50)
     print(total)
@@ -69,7 +69,7 @@ def predict(date_start):
     del final_list["clean_text"]
     final_list= final_list.drop_duplicates(keep="first")
     #r=final_list.drop_duplicates()
-    print((final_list.head()))
+    print(final_list.to_dict())
     return final_list.to_dict()
 
 

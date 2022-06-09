@@ -30,9 +30,8 @@ import folium
 from folium.plugins import FastMarkerCluster
 import spacy
 from spacy import displacy 
-from geotext import GeoText
 import ast
-import pycountry
+import geograpy
 
 STORAGE_LOCATION = 'csv'
 MODEL_STO= "model"
@@ -58,29 +57,21 @@ def get_data():
    # return df
     
 def localization(text):
-    nlp_wk = spacy.load("xx_ent_wiki_sm")
-    doc = nlp_wk(text)
-    location=[]
+    nlp = spacy.load('en_core_web_lg')  
+    gpe = [] # countries, cities, states
+    loc = [] # non gpe locations, mountain ranges, bodies of water
+
+
+    doc = nlp(text)
     for ent in doc.ents:
-        if ent.label_ in ["LOC"]:
-            return ent
-    print("____")
-    return None  
-
-def local(text):
-    for country in pycountry.countries:
-    # Handle both the cases(Uppercase/Lowercase)
-        if str(country.name).lower() in str(text).lower():
-            print(country.name)
-            return country.name
-
-""" def cities(text):
-    places = GeoText(text)
-    if places.cities:
-        return places.cities[0]
-    elsif: places.countries
-        return places.countries[0]
-    return None """
+        if (ent.label_ == 'GPE'):
+            gpe.append(ent.text)
+        elif (ent.label_ == 'LOC'):
+            loc.append(ent.text)
+    
+    print(None if loc == [] else loc[0])
+    print(gpe)
+    return None if loc == [] else loc[0]
     
 def get_list_of_cases(data):
     #model= import_model(data)
@@ -125,13 +116,13 @@ def main():
     #data = get_data()
    
     #save_csv(data, "raw")
-    data=pd.read_csv("get_cases.csv")
-    print(data.shape)
-    print(data.columns)
+    final_list=pd.read_csv("localization data.csv")
+    #print(final_list.shape)
+    #print(final_list.columns)
     #final_list = pd.read_csv(f"gs://{BUCKET_NAME}/csv/get_cases.csv", nrows=30)
     #final_list = pd.read_csv("get_cases.csv", index_col=False)
     #final_list= final_list.reset_index(drop=True, inplace=True)
-    data.drop(data.filter(regex="Unname"),axis=1, inplace=True)
+    #final_list.drop(final_list.filter(regex="Unname"),axis=1, inplace=True)
     #data.fields= data.fields.apply(lambda x : ast.literal_eval(x))
     #print(f"get_list_of_cases :{data.shape}")
     #final_list= get_list_of_cases(data)
@@ -139,13 +130,11 @@ def main():
     #print(final_list.body)
     #save_csv(final_list, "get_cases")
     
-    print("localization data")
-    final_list["localization"] = data.clean_text.apply(localization)
-    save_csv(final_list, "localization data")
+    #print("localization data")
+    #final_list["localization"] = final_list.clean_text.apply(localization)
+    #save_csv(final_list, "localization data")
     locator = geopy.geocoders.Nominatim(user_agent="mygeocoder")
     geocode = RateLimiter(locator.geocode)
-    print("address data")
-    save_csv(final_list, "address data")
     final_list["address"] = final_list["localization"].apply(geocode)
     print(final_list["address"])
     final_list["coordinates"] = final_list["address"].apply(lambda loc: tuple(loc.point) if loc else None)

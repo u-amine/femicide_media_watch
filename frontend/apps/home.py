@@ -11,8 +11,6 @@ def missionText1(text):
 
 def app():
 
-
-
     st.image("pics/Title.png", width=700)
 
     missionTitle("Our Mission")
@@ -30,8 +28,8 @@ def app():
 
 
     col1, col2  = st.columns(2)
-    col1.subheader('FMW Predicter: Simply input any text and we will tell you if it talks about a femicide case or not')
-    col2.subheader('FMW News Feed: Explore the latest articles on femicide cases around the world. Always up to date.')
+    col2.subheader('Femicide Media Predicter: Simply input any text and we will tell you if it talks about a femicide case or not')
+    col1.subheader('Femicide Media Watch: Explore the latest articles on femicide cases around the world. Always up to date.')
 
-    col1.button(label='Femicide Predicter Tool')
-    col2.button(label='Femicide News Feed')
+    col2.button(label='Femicide Media Predicter')
+    col1.button(label='Femicide Media Watch')

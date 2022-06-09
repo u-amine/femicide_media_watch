@@ -11,8 +11,8 @@ apps = MultiApp()
 
 # Add application here
 apps.add_app("Home", home.app)
-apps.add_app("FMW Predicter", predicter.app)
-apps.add_app("FMW News Feed", newsFeed.app)
-apps.add_app("Contribute Now!", contribute.app)
+apps.add_app("Media Watch", newsFeed.app)
+apps.add_app("Media Predicter", predicter.app)
+apps.add_app("The code behind", contribute.app)
 
 apps.run()
