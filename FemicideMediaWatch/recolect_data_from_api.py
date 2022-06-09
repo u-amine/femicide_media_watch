@@ -75,8 +75,6 @@ def cleaning_data(data):
     print(f"XXXXXXXXXXXXXXXXXX")
     data['clean_text'] = data.clean_text.apply(lemma)
     data['clean_text'] = data['clean_text'].astype('str')
-    del data['body']
-    del data['fields']
     print(f"saving the file!")
     print(f"XXXXXXXXXXXXXXXXXX")
     save_csv(data, "guardian_full")
@@ -85,7 +83,7 @@ def main():
     news_list =[]
     i=1
     while i < 761:
-        news = requests.get(f'https://content.guardianapis.com/search?q=(murder%20OR%20homicide%20OR%20femicide%20OR%20feminicide%20OR%20murdered%20OR%20dead%20OR%20death%20OR%20killed%20OR%20murdered%20OR%20shot%20OR%20stabbed%20OR%20struck%20OR%20strangled%20OR%20"lifeless")%20AND%20(woman%20OR%20girl%20OR%20"a young woman"%20OR%20"a teenage girl"%20OR%20"a girl"%20OR%20"body of a woman"%20OR%20prostitute%20OR%20"sex worker")&from-date=2000-01-01&show-fields=body&page-size=50&page={i}&api-key=test').json()
+        news = requests.get(f'https://content.guardianapis.com/search?q=(murder%20OR%20homicide%20OR%20femicide%20OR%20feminicide%20OR%20murdered%20OR%20dead%20OR%20death%20OR%20killed%20OR%20murdered%20OR%20shot%20OR%20stabbed%20OR%20struck%20OR%20strangled%20OR%20"lifeless")%20AND%20(woman%20OR%20girl%20OR%20"a young woman"%20OR%20"a teenage girl"%20OR%20"a girl"%20OR%20"body of a woman"%20OR%20prostitute%20OR%20"sex worker")&from-date=2000-01-01&show-fields=body,thumbnail&page-size=50&page={i}&api-key=test').json()
         news_list.append(news["response"]["results"])
         print(f"{i}: {len(news_list)}")
         print("_____")

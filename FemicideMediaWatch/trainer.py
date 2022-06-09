@@ -8,14 +8,19 @@ from nltk.corpus import stopwords
 import string
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk import word_tokenize 
-from sklearn import set_config; set_config(display='diagram')
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.pipeline import make_pipeline, make_union
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import MultinomialNB, ComplementNB
 from google.cloud import storage
+from sklearn.model_selection import cross_validate
+from sklearn.model_selection import GridSearchCV
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 STORAGE_LOCATION = 'models/femicide_model'
 MODEL_NAME='femicide_model'
@@ -75,26 +80,35 @@ def cleaning_data(data):
     #data['clean_text'] = data['clean_text'].astype('str')
     return data.clean_text
 
-def building_pipeline():
+def building_pipeline(X):
     feature_averager = FunctionTransformer(cleaning_data)
 
-    vectorizer = CountVectorizer()
+    vectorizer = CountVectorizer(ngram_range=(1,1),
+                                 max_df= (1.0),
+                                 max_features= None                                 
+                                 )
     #vectorizer = joblib.load("vectorice.joblib")
-
-    nvaive = MultinomialNB()
+    X_bow= vectorizer.fit_transform(X.clean_text)
+    nvaive = MultinomialNB(alpha=0.1)
 
     pipe = make_pipeline(feature_averager,
                         vectorizer, 
-                        MultinomialNB())
-    return pipe
+                        nvaive)
+    
+    
+    cv_nb = cross_validate(nvaive, X_bow, X.cases , scoring = "precision")
 
+    print(cv_nb['test_score'].mean())
+    return pipe
+    
 def defining_dataset(df):
     df_solo_1 = df[df.topic ==1]
     y = df_solo_1['cases']
     X = pd.DataFrame(df_solo_1.fields)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=0)
-    pipe=building_pipeline()
+    pipe=building_pipeline(df_solo_1)
     y_pred = pipe.fit(X, y)
+
     joblib.dump(y_pred, 'pipeline.joblib')
     
 def main():
