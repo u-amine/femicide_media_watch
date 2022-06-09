@@ -35,7 +35,7 @@ def app():
     
     st.header('Articles on femicide detected from a database of 30.000 articles by The Guardian')
     
-    articles = pd.read_csv('../final_list.csv')
+    articles = pd.read_csv('../get_cases_with_thum.csv')
     
     with st.spinner('Please wait, we are evaluating and detecting Cases of Femicide from all the articles of TODAY from The Guardian...'):
         response = requests.get(URL)
@@ -76,7 +76,7 @@ def app():
     for article in articleArray:
         with st.container():
             col1, col2 = st.columns((2, 4))
-            #col1.image(article.get('fields').get('thumbnail'), width=200)
+            col1.image(article.get('thumbnail'), width=200)
             col2.subheader(f"[{article.get('webTitle')}]({article.get('webUrl')})")
             body = f"{article.get('body')[:250]}..."
             body = body.replace('<p>', '')
