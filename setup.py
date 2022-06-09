@@ -13,5 +13,5 @@ setup(name='femicide_media_watch',
       test_suite='tests',
       # include_package_data: to install data from MANIFEST.in
       include_package_data=True,
-      scripts=['scripts/femicide_media_watch-run'],
+      #scripts=['scripts/femicide_media_watch-run'],
       zip_safe=False)
