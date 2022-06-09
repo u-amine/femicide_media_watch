@@ -28,6 +28,7 @@ RUNTIME_VERSION=1.15
 PACKAGE_NAME=FemicideMediaWatch
 FILENAME=trainer
 FILENAME_GRID=grid_search
+FILENAME_Data=map
 
 JOB_NAME=femicideMW_LDA_$(shell date +'%Y%m%d_%H%M%S')
 
@@ -46,11 +47,24 @@ run_locally:
 run_grid:
 	@python -m ${PACKAGE_NAME}.${FILENAME_GRID}
 
+run_map:
+	@python -m ${PACKAGE_NAME}.${FILENAME_Data}
+
 gcp_submit_training:
 	gcloud ai-platform jobs submit training ${JOB_NAME} \
 		--job-dir gs://${BUCKET_NAME}/${BUCKET_TRAINING_FOLDER} \
 		--package-path ${PACKAGE_NAME} \
 		--module-name ${PACKAGE_NAME}.${FILENAME} \
+		--python-version=${PYTHON_VERSION} \
+		--runtime-version=${RUNTIME_VERSION} \
+		--region ${REGION} \
+		--stream-logs
+
+gcp_submit_map:
+	gcloud ai-platform jobs submit training ${JOB_NAME} \
+		--job-dir gs://${BUCKET_NAME}/${BUCKET_TRAINING_FOLDER} \
+		--package-path ${PACKAGE_NAME} \
+		--module-name ${PACKAGE_NAME}.${FILENAME_Data} \
 		--python-version=${PYTHON_VERSION} \
 		--runtime-version=${RUNTIME_VERSION} \
 		--region ${REGION} \

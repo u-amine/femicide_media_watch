@@ -95,11 +95,11 @@ def building_pipeline():
 def grid_search(X, pipe):
     parameters = {
         'countvectorizer__ngram_range': ((1, 2),(1,1), (2,2), (1, 3)),
-        'multinomialnb__alpha': [1, 0.1, 0.01, 0.001, 0.0001, 0.00001],
+        'multinomialnb__alpha': [1, 0.1, 0.01],
         'countvectorizer__max_df': (0.5, 0.75, 1.0),
-        'countvectorizer__max_features': (None, 100, 200, 500, 1000)}
+        'countvectorizer__max_features': (None, 100, 300, 500)}
         
-    grid_search = GridSearchCV(pipe, parameters, scoring = "recall",
+    grid_search = GridSearchCV(pipe, parameters, scoring = "f1",
                             cv = 5, n_jobs=-1, verbose=1)
 
     grid_search.fit(X.clean_text, X.cases)
@@ -146,9 +146,9 @@ def defining_dataset(df):
     
 def main():
     df = get_data()
-    defining_dataset(df)
+    #defining_dataset(df)
     #print("evaluating matrix")
-    #matrix(df)
+    matrix(df)
     
 if __name__ == '__main__':
     #from FemicideMediaWatch.trainer import cleaning_data, lemma, remove_stopwords, basic_cleaning, just_text

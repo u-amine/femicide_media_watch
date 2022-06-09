@@ -83,20 +83,20 @@ def cleaning_data(data):
 def building_pipeline(X):
     feature_averager = FunctionTransformer(cleaning_data)
 
-    vectorizer = CountVectorizer(max_df= 1.0, 
-                                 ngram_range=(1,3),
-                                 max_features= 1000,
+    vectorizer = CountVectorizer(ngram_range=(1,1),
+                                 max_df= (1.0),
+                                 max_features= None                                 
                                  )
     #vectorizer = joblib.load("vectorice.joblib")
     X_bow= vectorizer.fit_transform(X.clean_text)
-    nvaive = MultinomialNB(alpha=1)
+    nvaive = MultinomialNB(alpha=0.1)
 
     pipe = make_pipeline(feature_averager,
                         vectorizer, 
                         nvaive)
     
     
-    cv_nb = cross_validate(MultinomialNB(), X_bow, X.cases , scoring = "recall")
+    cv_nb = cross_validate(nvaive, X_bow, X.cases , scoring = "precision")
 
     print(cv_nb['test_score'].mean())
     return pipe
