@@ -3,3 +3,12 @@ primaryColor="#F63366"
 backgroundColor="#F6F3F2"
 secondaryBackgroundColor="#F0F2F6"
 font="Verdana"
+
+[server]
+address = '0.0.0.0'
+enableCORS = false
+enableXsrfProtection = false
+
+[mapbox]
+
+token = "pk.eyJ1IjoidS1hbWluZSIsImEiOiJjbDQ2c3hpaG4wM25oM2J0NDZpcG0xZ2pkIn0.sVLmX3IcnHUwciOQtz-x9w"
